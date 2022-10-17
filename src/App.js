@@ -1,35 +1,17 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import Deneme from "./Deneme";
+import ContextRedux from "./Lib";
+import store from "./app/store";
 import actions from "./app/actions";
 
-class App extends React.Component {
-  getChildContext() {
-    return this.props;
-  }
-  render() {
-    return <Deneme />;
-  }
-}
-
-App.childContextTypes = {
-  actions: PropTypes.object,
-  state: PropTypes.object,
+const App = () => {
+  return (
+    <div>
+      <ContextRedux store={store} actions={actions}>
+        <Deneme/>
+      </ContextRedux>
+    </div>
+  );
 };
 
-function mapStateToProps(state) {
-  return { state };
-}
-
-function mapDispatchToProps(dispatch) {
-  for (const key in actions) {
-    for (const action in actions[key]) {
-      const actionCreator = actions[key][action];
-      actions[key][action] = (action) => dispatch(actionCreator(action));
-    }
-  }
-  return { actions };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
