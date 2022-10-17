@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import Deneme from "./Deneme";
+import actions from "./app/actions";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  getChildContext() {
+    return this.props;
+  }
+  render() {
+    return <Deneme />;
+  }
 }
 
-export default App;
+App.childContextTypes = {
+  actions: PropTypes.object,
+  state: PropTypes.object,
+};
+
+function mapStateToProps(state) {
+  return { state };
+}
+
+function mapDispatchToProps(dispatch) {
+  for (const key in actions) {
+    for (const action in actions[key]) {
+      const actionCreator = actions[key][action];
+      actions[key][action] = (action) => dispatch(actionCreator(action));
+    }
+  }
+  return { actions };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
